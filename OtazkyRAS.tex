@@ -1,0 +1,239 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+% Basic packages
+	\usepackage{amssymb}
+	\usepackage{amsmath}
+	\usepackage{graphicx}
+	\usepackage[czech]{babel}
+	\usepackage{natbib}
+
+% Relevant packages
+	\usepackage{bm}
+	\usepackage{bbm}
+	\usepackage{geometry}
+	\usepackage{enumitem}
+	\usepackage{listings}
+	\usepackage{multicol,float}
+
+% Document settings
+	\geometry{a4paper,margin=15mm}
+
+	\setlist[itemize]{nolistsep,noitemsep}
+		
+	\setlength{\parindent}{0pt}
+	\setlength{\parskip}{1.5em}
+	\renewcommand{\baselinestretch}{1.2}
+
+	\setlength{\abovedisplayskip}{1.2em}
+	\setlength{\belowdisplayskip}{1.2em}
+	\renewcommand{\arraystretch}{1.2}
+
+\begin{document}
+	\section{Popište možné tvary dynamických systémů pro modely: spojité-diskrétní, lineární-nelineární.}
+
+	\subsection*{Lineární spojitý systém v časové oblasti}
+	\begin{align*}
+		\bm{\dot{x}} &= \bm{A}\bm{x} + \bm{B}\bm{u} \\
+		\bm{y} &= \bm{C}\bm{x} + \bm{D}\bm{u}
+	\end{align*}
+	\subsection*{Lineární spojitý systém ve frekvenční oblasti}
+	\begin{align*}
+		s\bm{x} &= \bm{A}\bm{x} + \bm{B}\bm{u} \\
+		\bm{y} &= \bm{C}\bm{x} + \bm{D}\bm{u}
+	\end{align*}
+	Po úpravě $\bm{x}(s\bm{I} - \bm{A}) = \bm{B}\bm{u}$ můžeme dosadit
+	\begin{equation}
+		\bm{y} = \bm{C}(s\bm{I}-\bm{A})^{-1}\bm{B}\bm{u}+\bm{D}\bm{u}
+	\end{equation}
+	\subsubsection*{Dynamická poddajnost}
+	\begin{equation}
+	\bm{G}(\bm{x}) = \frac{\bm{y}}{\bm{u}} = \bm{C}(s\bm{I}-\bm{A})^{-1}\bm{B}+\bm{D}
+	\end{equation}
+	\subsection*{Lineární diskrétní systém}
+	\begin{align*}
+		\bm{x}_{t+\Delta t} &= \bm{M}\bm{x}_t + \bm{N}\bm{u}_t \\
+		\bm{y}_t &= \bm{O}\bm{x}_t + \bm{P}\bm{u}_t
+	\end{align*}
+	diskrétní tvar lze získat z tvaru spojitého modelu v časové oblasti
+	\begin{align*}
+		\bm{M} = e^{\bm{A}\Delta t} \doteq \bm{I} + \bm{A}\Delta t
+		\,,\;
+		\bm{N} = \bm{B}
+		\,,\;
+		\bm{O} = \bm{C}
+		\,,\;
+		\bm{P} = \bm{D}
+	\end{align*}
+	\subsection*{Nelineární systém}
+	\begin{align}
+		\bm{\dot{x}} = \bm{f}(\bm{x}) + \bm{g}(\bm{x})\bm{u} \\
+		\bm{y} = \bm{c}(\bm{x}) + \bm{d}(\bm{x}) \bm{u}
+	\end{align}
+	
+	\section{Modelování poddajných struktur}
+	Většinou vycházíme z mkp modelů s $10^4 \div 10^6$ tvarů
+	\begin{equation*}
+		\bm{M}\bm{\ddot{x}} + \bm{C}\bm{\dot{x}} + \bm{K}\bm{x} = \bm{F}
+	\end{equation*}
+
+	Ty redukujem pomocí modální trasformace, kde hledáme řešení problému vlastních čísel
+	\begin{equation*}
+		\bm{K}\bm{V} = \bm{\Omega}^2 \bm{M} \bm{V}
+	\end{equation*}
+	kde $\bm{\phi}_i$ jsou vlastní vektory a $\omega_i$ vlastní frekvence tvořící matice $\bm{V}$ a $\bm{\Omega}$  
+	\begin{equation*}
+		\bm{V} = \begin{bmatrix} \bm{\phi}_i & \dots & \bm{\phi}_N \end{bmatrix}
+		\,,\;
+		\bm{\Omega}^2 = \operatorname{diag}(\omega_i^2)
+		\;,\quad 
+		i \in \langle 1,N \rangle
+	\end{equation*}
+
+	Po té platí
+	\begin{equation*}
+		\bm{V}^T\bm{M}\bm{V} = \bm{1}
+		\;,\quad 
+		\bm{V}^T\bm{K}\bm{V} = \bm{\Omega}^2
+	\end{equation*}
+
+	Soustavu pohybovných rovnic systému s proporčním tlumením
+
+	lze zavedením modální souřadnic $\bm{q} \,,\; \bm{x} = \bm{V}\bm{q}$ a vynásobením transponovanou maticí modální transformace $\bm{V}^T$ zleva, převést do tvaru
+	\begin{equation*}
+		\bm{\ddot{q}} + \bm{\beta}\bm{\dot{q}} + \bm{\Omega}^2 \bm{q} = \bm{V}^T \bm{F}
+		\;,\quad 
+		\bm{\beta} = \operatorname{diag}(2\,b_{r_i}\omega_i) \;,\quad i \in \langle 1,N \rangle
+	\end{equation*}
+	kde $ b_{r_i}$ jsou poměrné útlumy.
+
+	Soustava se pak rozpadá na rovnice ve tvaru
+	\begin{equation*}
+		\ddot{q}_i + 2\,\omega_i\xi_i \dot{q} + \omega_i^2 q = f_i
+		\;,\quad 
+		f_i = \bm{\phi}_i \cdot \bm{F}
+		\;,\quad 
+		i \in \langle 1,N \rangle
+	\end{equation*}
+	kde bere rovnice pro $10^1 \div 10^2$ nejnižších vlastních frekvencí.
+
+	\section{Redukce modelů poddajných struktur pro syntézu řízení. Zohlednění vypuštěných stavů soustavy pomocí reziduí.}
+
+	\section{Balancovaný tvar stavového popisu soustavy, smysl tohoto tvaru při získání návrhového modelu.}
+
+	\section{Typy aktivních a poloaktivních aktuátorů používaných v mechatronických systémech, hlavní vlastnosti, důsledky pro použití.}
+
+	\section{Snižování vibrací (low-authority) versus řízení pohybu/polohy (high-authority). Princip, příklady}
+
+	\section{Aktivní absorbce kmitů soustav, příklad návrhu řízení}
+
+	\section{Mechatronická tuhost. Princip, model, příklad návrhu řízení.}
+
+	\section{Aktivní tlumení vibrací pomocí kolokovaných aktuátorů a senzorů. Příklad s použitím planárních piezo-aktuátorů.}
+
+	\section{Aktivní vibroizolace soustav, integrální silová zpětná vazba, příklad návrhu řízení.}
+
+	Nahradíme piezostackem s tuhostí $k$, nastavitelnou volnou délkou $l_0(u) = l_{00} + qu$ a pozitivní, integrální, silovou zpětnou vazbou $u = p \int F\,dt$, kde $p$ je volitelný parametr.
+
+	Pohybová rovnice systému bude nabývat tvar
+	\begin{equation}
+		m\ddot{y} = - \underbrace{k ( y-z_0(t)-qu)}_{F}
+	\end{equation}
+	Dosazením z pohybové rovnice můžeme určit tvar akčního zásahu
+	\begin{align}
+		u = p \int F\,dt = p \int -m\ddot{y} = -pm\dot{y} + C
+	\end{align}
+
+	Dosazením tvaru akčního zásahu zpět do pohybové rovnice získáme pohybovou rovnici tlumeného systému
+	\begin{equation}
+		m\ddot{y} = -k (y-z_0(t)) - \underbrace{kmpq}_{b_{\text{sky}}}\dot{y} - kqC
+	\end{equation}
+	kde hodnotu $b_{\text{sky}}$ můžeme ladit volbou parametru $p$
+
+	\section{Říditelnost a pozorovatelnost, Gramián říditelnosti a pozorovatelnosti}
+
+	Uvažujme lin. systém ve tvaru
+	\begin{align*}
+		\bm{\dot{x}} &= \bm{A}\bm{x} + \bm{B}\bm{u} \\
+		\bm{y} &= \bm{C}\bm{x} + \bm{D}\bm{u}
+	\end{align*}
+
+	\subsection*{Říditelnost}
+	Systém je říditelný pokud jej lze z libovolného stavu $\bm{x} \in \mathbb{R}^n$ dostat do stavu nulového $\bm{x} = \bm{0}$ působením vstupů $\bm{u}$.
+
+	\subsubsection*{Matice říditelnosti}
+	\begin{equation}
+		\bm{\mathcal{C}}
+		=
+		\begin{bmatrix}
+			\bm{B} & \bm{A} \bm{B} & \bm{A}^{2} \bm{B} & \dots & \bm{A}^{n-1} \bm{B}
+		\end{bmatrix}
+	\end{equation}
+	Pokud $\bm{\mathcal{C}}$ je plné hodnosti, systém je říditelný.
+
+	\subsubsection*{Gramián říditelnosti}
+	\begin{equation}
+		\bm{W}_{c}
+		=
+		\int_{0}^{\infty} e^{\bm{A} \tau} \bm{B} \bm{B}^T e^{\bm{A}^T \tau} d \tau
+	\end{equation}
+	Vlastní vektory $\bm{W}_c$ patřící k největším vlastním číslům jsou nejlépe říditelné směry ve stavovém prostoru. Podmíněností $\bm{W}_c$ můžeme hodnotit celkovou říditelnost systému (ve všech směrech stavového prostoru).
+
+	\subsection*{Pozorovatelnost}
+	Systém je pozorovatelný pokud na konečném časovém intervalu lze ze změřeného průběhu vstupů $\bm{u}$ a výstupů $\bm{y}$ určit stav systému na počátku invervalu $\bm{x}_0 \in \mathbb{R}^n$.
+	
+	\subsubsection*{Matice pozorovatelnosti}
+	\begin{equation}
+		\bm{\mathcal{O}}
+		=
+		\begin{bmatrix}
+			\bm{C} \\
+			\bm{C} \bm{A} \\
+			\bm{C} \bm{A}^{2} \\
+			\vdots \\
+			\bm{C} \bm{A}^{n-1}
+		\end{bmatrix}
+	\end{equation}
+	Pokud $\bm{\mathcal{O}}$ je plné hodnosti, systém je pozorovatelný.
+
+	\subsubsection*{Gramián pozorovatelnosti}
+	\begin{equation}
+		\bm{W}_{o}
+		=
+		\int_{0}^{\infty} e^{\bm{A} \tau} \bm{C} \bm{C}^T e^{\bm{A}^T \tau} d \tau
+	\end{equation}
+	Vlastní vektory $\bm{W}_o$ patřící k největším vlastním číslům jsou nejlépe pozorovatelné směry ve stavovém prostoru. Podmíněností $\bm{W}_o$ můžeme hodnotit celkovou pozorovatelnost systému (ve všech směrech stavového prostoru).
+
+	\section{Computed Torques}
+	\begin{equation}
+		\bm{\ddot{e}}
+		=
+		\bm{\ddot{q}}_{d}-\bm{\ddot{q}}
+		=
+		\bm{\ddot{q}}_{d}-\bm{M}^{-1} \bm{\tau}+\bm{M}^{-1} \bm{N}
+	\end{equation}
+
+	\begin{equation}
+		\frac{d}{d t}
+		\begin{bmatrix}
+			\bm{e} \\
+			\bm{\dot{e}}
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			\bm{0} & \bm{I} \\
+			\bm{0} & \bm{0}
+		\end{bmatrix}
+		\bm{x}
+		+	
+		\begin{bmatrix}
+			\bm{0} \\
+			\bm{I}
+		\end{bmatrix}
+		\bm{u}
+	\end{equation}
+
+	\section{Použití optimalizačních metod pro syntézu řízení. Aktivní a poloaktivní aktuátory, lineární a nelineární soustavy (ilustrace na příkladu nelineární soustavy).}
+
+
+\end{document}
