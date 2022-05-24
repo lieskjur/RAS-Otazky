@@ -57,13 +57,13 @@
 	\end{align*}
 	diskrétní tvar lze získat z tvaru spojitého modelu v časové oblasti
 	\begin{align*}
-		\bm{M} = e^{\bm{A}\Delta t} \doteq \bm{I} + \bm{A}\Delta t
-		\,,\;
-		\bm{N} = \bm{B}
-		\,,\;
-		\bm{O} = \bm{C}
-		\,,\;
-		\bm{P} = \bm{D}
+		\bm{M} &= e^{\bm{A}\Delta t} \doteq \bm{I} + \bm{A}\Delta t
+		\\
+		\bm{N} &= \bm{A}^{-1} \left( e^{\mathbf{A}\Delta t} - \mathbf{I} \right) \bm{B} \doteq \bm{B}\Delta t
+		\\
+		\bm{O} &= \bm{C}
+		\\
+		\bm{P} &= \bm{D}
 	\end{align*}
 	\subsection*{Nelineární systém}
 	\begin{align}
@@ -77,7 +77,7 @@
 		\bm{M}\bm{\ddot{x}} + \bm{C}\bm{\dot{x}} + \bm{K}\bm{x} = \bm{F}
 	\end{equation*}
 
-	Ty redukujem pomocí modální trasformace, kde hledáme řešení problému vlastních čísel
+	Ty redukujem pomocí modální trasformace, kde hledáme řešení zobecněného problému vlastních čísel
 	\begin{equation*}
 		\bm{K}\bm{V} = \bm{\Omega}^2 \bm{M} \bm{V}
 	\end{equation*}
@@ -90,26 +90,25 @@
 		i \in \langle 1,N \rangle
 	\end{equation*}
 
-	Po té platí
+	Pro navzájem ortogonální vlastní vektory s vahou matice hmotnosti (získané příslušnou normalizací) platí
 	\begin{equation*}
 		\bm{V}^T\bm{M}\bm{V} = \bm{1}
 		\;,\quad 
 		\bm{V}^T\bm{K}\bm{V} = \bm{\Omega}^2
 	\end{equation*}
-
-	Soustavu pohybovných rovnic systému s proporčním tlumením
-
-	lze zavedením modální souřadnic $\bm{q} \,,\; \bm{x} = \bm{V}\bm{q}$ a vynásobením transponovanou maticí modální transformace $\bm{V}^T$ zleva, převést do tvaru
+	
+	zavedením modální souřadnic $\bm{q} \,,\; \bm{x} = \bm{V}\bm{q}$ a vynásobením transponovanou maticí modální transformace $\bm{V}^T$ zleva, lze převést pohybovou rovnici do tvaru
 	\begin{equation*}
-		\bm{\ddot{q}} + \bm{\beta}\bm{\dot{q}} + \bm{\Omega}^2 \bm{q} = \bm{V}^T \bm{F}
+		\bm{I}\bm{\ddot{q}} + \bm{\Gamma}\bm{\dot{q}} + \bm{\Omega}^2 \bm{q} = \bm{V}^T \bm{F}
 		\;,\quad 
-		\bm{\beta} = \operatorname{diag}(2\,b_{r_i}\omega_i) \;,\quad i \in \langle 1,N \rangle
+		\bm{\Omega} = \bm{V}^T\bm{K}\bm{V}
+		\,,\;
+		\bm{\Gamma} = \bm{V}^T\bm{B}\bm{V}
 	\end{equation*}
-	kde $ b_{r_i}$ jsou poměrné útlumy.
 
-	Soustava se pak rozpadá na rovnice ve tvaru
+	O systému můžeme říct, že má proporční tlumení, je-li matice $\bm{C}$ lineární kombinací matic $\bm{M}$ a $\bm{K}$. Pak je tato matice diagonalizovatelná modální transformací $\bm{V}$ a matice $\bm{\Gamma}$ je diagonální s prvky $\Gamma_{ii} = 2 \zeta_{i} \Omega_i$, kde $\zeta_i$ jsou poměrné útlumy. Soustava se pak rozpadá na samostatně řešitelné rovnice ve tvaru
 	\begin{equation*}
-		\ddot{q}_i + 2\,\omega_i\xi_i \dot{q} + \omega_i^2 q = f_i
+		\ddot{q}_i + 2\,\Omega_i\xi_i \dot{q} + \Omega_i^2 q = f_i
 		\;,\quad 
 		f_i = \bm{\phi}_i \cdot \bm{F}
 		\;,\quad 
@@ -118,16 +117,152 @@
 	kde bere rovnice pro $10^1 \div 10^2$ nejnižších vlastních frekvencí.
 
 	\section{Redukce modelů poddajných struktur pro syntézu řízení. Zohlednění vypuštěných stavů soustavy pomocí reziduí.}
+	\begin{align}
+		\begin{bmatrix}
+			\bm{\dot{x}}_a \\
+			\bm{\dot{x}}_b
+		\end{bmatrix}
+		&=
+		\begin{bmatrix}
+			\bm{A}_{aa} & \bm{A}_{ab} \\
+			\bm{A}_{ba} & \bm{A}_{bb}
+		\end{bmatrix}
+		\begin{bmatrix}
+			\bm{x}_a \\
+			\bm{x}_b
+		\end{bmatrix}
+		+
+		\begin{bmatrix}
+			\bm{B}_a \\
+			\bm{B}_b \\
+		\end{bmatrix}
+		\bm{u}
+		\\
+		\bm{y}
+		&=
+		\begin{bmatrix}
+			\bm{C}_a & \bm{C}_b
+		\end{bmatrix}
+		\begin{bmatrix}
+			\bm{x}_a \\
+			\bm{x}_b
+		\end{bmatrix}
+		+
+		\bm{D}\bm{u}
+	\end{align}
+
+	\subsection{Truncation}
+	Vypouštím stavy $\bm{x}_b$ ze systému.
+
+	\begin{align}
+		\bm{\dot{x}}_a &= \bm{A}_{aa} \bm{x}_a + \bm{B}_a \bm{u} \\
+		\bm{y} &= \bm{C}_a \bm{x}_a + \bm{D}\bm{u}
+	\end{align}
+
+	\subsection{Singular Pertubation Approximation}
+
+	Dělám approximaci $\bm{\dot{x}} = \bm{0}$
+	\begin{equation}
+		\bm{\dot{x}}_b = \bm{A}_{ba}\bm{x}_a + \bm{A}_{bb}\bm{x}_b + \bm{B}_b\bm{u} = \bm{0}
+		\quad \Rightarrow \quad
+		\bm{x}_b = -\bm{A}_{bb}^{-1}\bm{A}_{ba} \bm{x}_a - \bm{A}_{bb}^{-1} \bm{B}_b \bm{u}
+	\end{equation}
+
+	\begin{align}
+		\bm{\dot{x}}_a
+		&=
+		(\bm{A}_{aa} - \bm{A}_{ab} \bm{A}_{bb}^{-1} \bm{A}_{ba}) \bm{x}_a
+		+ 
+		(\bm{B}_a - \bm{A}_{ab} \bm{A}_{bb}^{-1} \bm{B}_b) \bm{u} \\
+		\bm{y}
+		&=
+		(\bm{C}_a - \bm{C}_b \bm{A}_{bb}^{-1} \bm{A}_{ba}) \bm{x}_a
+		+
+		(\bm{D} - \bm{C}_b \bm{A}_{bb}^{-1} \bm{B}_b) \bm{u}
+	\end{align}
 
 	\section{Balancovaný tvar stavového popisu soustavy, smysl tohoto tvaru při získání návrhového modelu.}
 
 	\section{Typy aktivních a poloaktivních aktuátorů používaných v mechatronických systémech, hlavní vlastnosti, důsledky pro použití.}
 
+	\subsection{Aktivní aktuátory}
+	Zdroje řízených akčních sil
+	\begin{itemize}
+		\item pieozelektrické materiály
+			\begin{itemize}
+			\item piezostack - nižší napětí oproti obyčejným piezo.
+			\item aplified piezo actuator
+			\end{itemize}
+		\item hydraulické aktuátory - nízká šířka pásma řízení síly
+		\item elektromagnetické - voice coil acutator
+	\end{itemize}
+
+	\begin{figure}[h!]
+		\centering
+		\includegraphics{figs/AktivniAktuator.png}
+	\end{figure}
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.5\linewidth]{figs/VoiceCoil.png}
+		\caption{Voice coil}
+	\end{figure}
+
+	\subsection{Poloaktivní}
+	Zdroje řízených tlumících sil (řízená disipace energie)
+	\begin{itemize}
+	\item tlumič s magnetoreologickou kapalinou
+	\item tlumič se škrtícím ventilem
+	\end{itemize}
+
+	\begin{figure}[h!]
+		\centering
+		\includegraphics{figs/PoloAktivniAktuator.png}
+	\end{figure}
+
 	\section{Snižování vibrací (low-authority) versus řízení pohybu/polohy (high-authority). Princip, příklady}
+	
+	Rozdělení na LAC a HAC vychází z předpokladu, že síly na řízeni pohybu jsou řádově vyšší než síly potřebné ke snížení vibrací. Stejně tak se předpokládá, že HAC reguluje děje s řádově větší časovou konstantou, než LAC (si myslím). To umožnuje použít HAC a LAC společně, jelikož spolu neinterferují.
+
+	\subsection*{LAC}
+	\begin{itemize}
+		\item často využívá kolokace aktuátoru a senzoru, pro zvýšení robustnosti a decentralizované přístupy k řízení.
+		\item Positive Position Feedback, Integral Force Feedback
+	\end{itemize}
+
+	\subsection*{HAC}
+	\begin{itemize}
+		\item Rekonstrukce stavů pomocí stavového pozorovatele
+		\item Computed Torques, LQG (LQR + Kalman filtr)
+	\end{itemize}
 
 	\section{Aktivní absorbce kmitů soustav, příklad návrhu řízení}
+	
+	Využívá se antirezonance tzn. kmitání soustavy, při které je nulá výchlyka v místě buzení, zatímco kmitá jiná část soustavy. Pro tento účel se montují na mechanismy ``hltiče'' vibrací v podobě hmoty spojené se zbytkem soustavy pomocí aktivních prvků.
+
+	Výsledkem připojení hltiče je systém ve tvaru
+	\begin{align}
+		\bm{\dot{x}} &= \bm{A}\bm{x} + \bm{B}\bm{u} + \bm{B}_\text{akt} \bm{u}_\text{akt} \\
+		\bm{y} &= \bm{C}\bm{x}
+	\end{align}
+	Pokud máme přístup ke stavu systému, můžeme zavést lineární zpětnou vazbu
+	\begin{equation}
+		\bm{u}_\text{akt} = -\bm{K}\bm{x}
+	\end{equation}
+	s důsledkem na stavový popis
+	\begin{equation}
+		\bm{\dot{x}} = \underbrace{(\bm{A}-\bm{B}_h\bm{K})}_{A_\text{akt}}\bm{x} + \bm{B}\bm{u}
+	\end{equation}
+	Převodem do frekvenční oblasti získáme systém
+	\begin{equation}
+	\bm{y}(s) = \bm{H}(s)\bm{u}
+	\;,\quad 
+	\bm{H}(s) = \bm{C}(s\bm{I}-\bm{A}_\text{akt})^{-1}\bm{B}
+	\end{equation}
+	kde nuly přenosu $\bm{H}(s)$ můžeme manipulovat volbou $\bm{K}$.
 
 	\section{Mechatronická tuhost. Princip, model, příklad návrhu řízení.}
+
+	Koncept založený na použití pomocné sekundární struktury k navýšení dynamické tuhosti primární struktury a to jejich spojením pomocí aktivního prvku. Podmínka říditelnosti říká, že vlastní frekvence primární a sekundární struktury se musí lišit.
 
 	\section{Aktivní tlumení vibrací pomocí kolokovaných aktuátorů a senzorů. Příklad s použitím planárních piezo-aktuátorů.}
 
@@ -206,12 +341,18 @@
 
 	\section{Computed Torques}
 	\begin{equation}
+	\bm{M}(\bm{q}) + \bm{N}(\bm{q},\bm{\dot{q}}) = \bm{\tau}
+	\end{equation}
+
+	\begin{align}
+		\bm{e} &= \bm{q}_{d}-\bm{q} \\
+		\bm{\dot{e}} &= \bm{\dot{q}}_{d}-\bm{\dot{q}} \\
 		\bm{\ddot{e}}
-		=
+		&=
 		\bm{\ddot{q}}_{d}-\bm{\ddot{q}}
 		=
-		\bm{\ddot{q}}_{d}-\bm{M}^{-1} \bm{\tau}+\bm{M}^{-1} \bm{N}
-	\end{equation}
+		\bm{\ddot{q}}_{d}-\bm{M}(\bm{q})^{-1} \bm{\tau}+\bm{M}(\bm{q})^{-1} \bm{N}(\bm{q},\bm{\dot{q}})
+	\end{align}
 
 	\begin{equation}
 		\frac{d}{d t}
@@ -224,13 +365,27 @@
 			\bm{0} & \bm{I} \\
 			\bm{0} & \bm{0}
 		\end{bmatrix}
-		\bm{x}
+		\begin{bmatrix}
+			\bm{e} \\
+			\bm{\dot{e}}
+		\end{bmatrix}
 		+	
 		\begin{bmatrix}
 			\bm{0} \\
 			\bm{I}
 		\end{bmatrix}
 		\bm{u}
+	\end{equation}
+
+	\begin{align}
+		\bm{\ddot{e}} &= \bm{u} \\
+		\bm{u} &= -k_p \bm{e} - k_d \bm{\dot{e}} - k_i \bm{\varepsilon}
+		\;,\quad 
+		\bm{\dot{\varepsilon}} = \bm{e} 
+	\end{align}
+
+	\begin{equation}
+		\bm{\tau} = \bm{M}(\bm{q}) ( \bm{\ddot{q}}_d + k_p \bm{e} + k_d \bm{\dot{e}} + k_i \bm{\varepsilon} ) + \bm{N}(\bm{q},\bm{\dot{q}})
 	\end{equation}
 
 	\section{Použití optimalizačních metod pro syntézu řízení. Aktivní a poloaktivní aktuátory, lineární a nelineární soustavy (ilustrace na příkladu nelineární soustavy).}
