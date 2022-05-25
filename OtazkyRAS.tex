@@ -151,6 +151,78 @@
 		\bm{D}\bm{u}
 	\end{align}
 
+	\subsection*{Můj vlastní přístup k dělení $A$}
+
+	Pro systém ve tvaru
+	\begin{equation}
+	\bm{M}\bm{\ddot{x}} + \bm{B}\bm{\dot{x}} + \bm{K}\bm{x} = \bm{F}
+	\end{equation}
+
+	\begin{equation}
+	A
+	=
+	% \begin{bmatrix}
+	% 	0 & 0 & 1 & 0 \\
+	% 	0 & 0 & 0 & 1 \\
+	% 	-V_1^T K V_1 & -V_1^T K V_2 & -V_1^T B V_1 & -V_1^T B V_2 \\
+	% 	-V_2^T K V_1 & -V_2^T K V_2 & -V_2^T B V_1 & -V_2^T B V_2
+	% \end{bmatrix}
+	\begin{bmatrix}
+		0 & 0 & 1 & 0 \\
+		0 & 0 & 0 & 1 \\
+		-K_{11} & -K_{12} & -B_{11} & -B_{12} \\
+		-K_{21} & -K_{22} & -B_{21} & -B_{22}
+	\end{bmatrix}
+\end{equation}
+
+\begin{align}
+	K_{11} &= V_1^T K V_1 & 
+	B_{11} &= V_1^T B V_1 \\
+	K_{21} &= V_2^T K V_1 = 0 &
+	B_{21} &= V_2^T B V_1 \\
+	K_{12} &= V_1^T K V_2 = 0 &
+	B_{12} &= V_1^T B V_2 \\
+	K_{22} &= V_2^T K V_2 &
+	B_{22} &= V_2^T B V_2 
+\end{align}
+
+
+% \begin{itemize}
+% 	\item [$N$] - počet počátečních stavů
+% 	\item [$n$] - počet zachovaných stavů
+% 	\item [$r = N-n$] - počet redukovaných stavů
+% \end{itemize}
+
+\begin{align}
+	A_{11}
+	&=
+	\begin{bmatrix}
+		0_{n \times n} & 1_{n \times n} \\
+		-K_{11} & -B_{11}
+	\end{bmatrix}
+	\;,\quad \\
+	A_{21}
+	&=
+	\begin{bmatrix}
+		0_{(N-n) \times n} & 0_{(N-n) \times n} \\
+		0_{(N-n) \times n} & -B_{21}
+	\end{bmatrix}
+	\;,\quad \\
+	A_{12}
+	&=
+	\begin{bmatrix}
+		0_{n \times (N-n)} & 0_{n \times (N-n)} \\
+		0_{n \times (N-n)} & -B_{12}
+	\end{bmatrix}
+	\;,\quad \\
+	A_{22}
+	&=
+	\begin{bmatrix}
+		0_{(N-n) \times (N-n)} & 1_{(N-n) \times (N-n)} \\
+		-K_{22} & -B_{22}
+	\end{bmatrix}
+\end{align}
+
 	\subsection{Truncation}
 	Vypouštím stavy $\bm{x}_b$ ze systému.
 
@@ -183,24 +255,45 @@
 
 	\section{Balancovaný tvar stavového popisu soustavy, smysl tohoto tvaru při získání návrhového modelu.}
 
+	\emph{``The system triple $(\mathrm{A}, \mathrm{B}, \mathrm{C})$ is open-loop balanced, if its controllability and observability grammians are equal and diagonal, as defined by Moore in [109],
+	$$
+	\begin{aligned}
+	\mathrm{W}_{\mathrm{c}} &=\mathrm{W}_{\mathrm{o}}=\Gamma \\
+	\Gamma &=\operatorname{diag}\left(\gamma_{1}, \ldots, \gamma_{\mathrm{N}}\right) \\
+	\gamma_{\mathrm{i}} & \geq 0, \quad \mathrm{i}=1, \ldots, \mathrm{N} .
+	\end{aligned}
+	$$
+	The matrix $\Gamma$ is diagonal, and its diagonal entries $\gamma_{i}$ are called Hankel singular values of the system (which were earlier introduced as eigenvalues of the product of the controllability and observability grammians).''} 
+
+	\emph{``The eigenvalues of the grammians change during the coordinate transformation. However, the eigenvalues of the grammian product are invariant. It can be shown as follows:}
+	$$
+	\lambda_{i}\left(W_{c n} W_{o n}\right)=\lambda_{i}\left(R^{-1} W_{c} R^{-T} R^{T} W_{o} R\right)=\lambda_{i}\left(R^{-1} W_{c} W_{o} R\right)=\lambda_{i}\left(W_{c} W_{o}\right) .
+	$$
+	These invariants are denoted $\gamma_{i}$,
+	$$
+	\gamma_{i}=\sqrt{\lambda_{i}\left(W_{c} W_{o}\right)}, \quad i=1, \ldots, N,
+	$$
+	\emph{and are called the Hankel singular values of the system.''}
+
 	\section{Typy aktivních a poloaktivních aktuátorů používaných v mechatronických systémech, hlavní vlastnosti, důsledky pro použití.}
 
 	\subsection{Aktivní aktuátory}
 	Zdroje řízených akčních sil
 	\begin{itemize}
-		\item pieozelektrické materiály
+		\item pieozelektrické materiály - velký poměr síla/hmotnost, ale nízký zdvih
 			\begin{itemize}
 			\item piezostack - nižší napětí oproti obyčejným piezo.
 			\item aplified piezo actuator
 			\end{itemize}
 		\item hydraulické aktuátory - nízká šířka pásma řízení síly
-		\item elektromagnetické - voice coil acutator
+		\item elektromagnetické (voice coil acutator) - možnost skoro nulové tuhosti
 	\end{itemize}
 
 	\begin{figure}[h!]
 		\centering
 		\includegraphics{figs/AktivniAktuator.png}
 	\end{figure}
+
 	\begin{figure}[h!]
 		\centering
 		\includegraphics[width=0.5\linewidth]{figs/VoiceCoil.png}
@@ -221,8 +314,11 @@
 
 	\section{Snižování vibrací (low-authority) versus řízení pohybu/polohy (high-authority). Princip, příklady}
 	
-	Rozdělení na LAC a HAC vychází z předpokladu, že síly na řízeni pohybu jsou řádově vyšší než síly potřebné ke snížení vibrací. Stejně tak se předpokládá, že HAC reguluje děje s řádově větší časovou konstantou, než LAC (si myslím). To umožnuje použít HAC a LAC společně, jelikož spolu neinterferují.
+	% Rozdělení na LAC a HAC vychází z předpokladu, že síly na řízeni pohybu jsou řádově vyšší než síly potřebné ke snížení vibrací. 
+	\emph{``The control forces that act on a structure can be divided into tracking forces and damping forces. The tracking forces move the structure to follow a target and the damping forces act on the structure to suppress vibrations. Typically, the tracking forces are significantly larger than the damping forces. For this reason a structural controller can be divided into low- and high-authority controllers. The low-authority controller is the one that uses a limited input (torque, force) to control the vibrations of a system.''}
 
+	\emph{`` the control system action on a flexible structure can be separated into two stages: stage one, when damping is added to a structure and vibrations are suppressed showing faster decay; and stage two, of “total” system motion where the damping is little affected.''}
+	
 	\subsection*{LAC}
 	\begin{itemize}
 		\item často využívá kolokace aktuátoru a senzoru, pro zvýšení robustnosti a decentralizované přístupy k řízení.
@@ -264,8 +360,20 @@
 
 	Koncept založený na použití pomocné sekundární struktury k navýšení dynamické tuhosti primární struktury a to jejich spojením pomocí aktivního prvku. Podmínka říditelnosti říká, že vlastní frekvence primární a sekundární struktury se musí lišit.
 
+	\pagebreak
 	\section{Aktivní tlumení vibrací pomocí kolokovaných aktuátorů a senzorů. Příklad s použitím planárních piezo-aktuátorů.}
 
+	\emph{``Collocated controllers have their sensors collocated with actuators. They are a special case of the dissipative controllers, which are designed based on the passivity principle.''}
+
+	As stated by Joshi [83, p. 45] “the stability of dissipative controllers is guaranteed regardless of the number of modes controlled (or even modeled), and regardless of parameter errors.”
+
+	\emph{``As a corollary, consider a system with the state-space representation $(A, B, C)$, which has collocated sensors and actuators, that is, $C=B^{T}$. In this case, a closedloop system with the proportional feedback gain
+	$$
+	\bm{u}=-\bm{K}\bm{y}
+	$$
+	is stable, for $\bm{K}=\operatorname{diag}\left(k_i\right), i=1, \ldots, r$ and $k_i>0$.''}
+
+	\pagebreak
 	\section{Aktivní vibroizolace soustav, integrální silová zpětná vazba, příklad návrhu řízení.}
 
 	Nahradíme piezostackem s tuhostí $k$, nastavitelnou volnou délkou $l_0(u) = l_{00} + qu$ a pozitivní, integrální, silovou zpětnou vazbou $u = p \int F\,dt$, kde $p$ je volitelný parametr.
