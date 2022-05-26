@@ -186,6 +186,7 @@
 	B_{22} &= V_2^T B V_2 
 \end{align}
 
+V případě proporčního tlumení $\bm{B}_{21} = \bm{0}$, $\bm{B}_{12} = \bm{0}$.
 
 % \begin{itemize}
 % 	\item [$N$] - počet počátečních stavů
@@ -224,7 +225,7 @@
 \end{align}
 
 	\subsection{Truncation}
-	Vypouštím stavy $\bm{x}_b$ ze systému.
+	Dělám approximaci $\bm{x}_b = \bm{0} \Rightarrow \bm{\dot{x}}_b = \bm{0} \Rightarrow \bm{A}_{ba} = \bm{0} \,\; \bm{B}_b = \bm{0}$
 
 	\begin{align}
 		\bm{\dot{x}}_a &= \bm{A}_{aa} \bm{x}_a + \bm{B}_a \bm{u} \\
@@ -233,7 +234,7 @@
 
 	\subsection{Singular Pertubation Approximation}
 
-	Dělám approximaci $\bm{\dot{x}} = \bm{0}$
+	Dělám approximaci $\bm{\dot{x}}_b = \bm{0}$
 	\begin{equation}
 		\bm{\dot{x}}_b = \bm{A}_{ba}\bm{x}_a + \bm{A}_{bb}\bm{x}_b + \bm{B}_b\bm{u} = \bm{0}
 		\quad \Rightarrow \quad
@@ -253,7 +254,11 @@
 		(\bm{D} - \bm{C}_b \bm{A}_{bb}^{-1} \bm{B}_b) \bm{u}
 	\end{align}
 
+	\pagebreak
 	\section{Balancovaný tvar stavového popisu soustavy, smysl tohoto tvaru při získání návrhového modelu.}
+
+	\emph{``
+	Consider a case when controllability and observability grammians are equal and diagonal. The diagonality means that each state has its own and independent measure of controllability and observability (which is the diagonal value of the grammians). The equality of grammians means that each state is equally controllable and observable or, in terms of structures, each mode is equally controllable and observable (excited to the same degree as it is sensed). The equality and diagonality of grammians is a feature of special usefulness—this allows us to evaluate each state (or mode) separately, and to determine their values for testing and for control purposes. Indeed, if a state is weakly controllable and, at the same time, weakly observable, it can be neglected without impacting the accuracy of analysis, dynamic testing, or control design procedures. On the other hand, if a state is strongly controllable and strongly observable, it must be retained in the system model in order to preserve accuracy of analysis, test, or control system design. Knowing the importance of the diagonal and equal grammians, we proceed to their definition and determination.''}
 
 	\emph{``The system triple $(\mathrm{A}, \mathrm{B}, \mathrm{C})$ is open-loop balanced, if its controllability and observability grammians are equal and diagonal, as defined by Moore in [109],
 	$$
@@ -263,18 +268,10 @@
 	\gamma_{\mathrm{i}} & \geq 0, \quad \mathrm{i}=1, \ldots, \mathrm{N} .
 	\end{aligned}
 	$$
-	The matrix $\Gamma$ is diagonal, and its diagonal entries $\gamma_{i}$ are called Hankel singular values of the system (which were earlier introduced as eigenvalues of the product of the controllability and observability grammians).''} 
+	The matrix $\Gamma$ is diagonal, and its diagonal entries $\gamma_{i}$ are called Hankel singular values of the system (which were earlier introduced as eigenvalues of the product of the controllability and observability grammians).
+	''}
 
-	\emph{``The eigenvalues of the grammians change during the coordinate transformation. However, the eigenvalues of the grammian product are invariant. It can be shown as follows:}
-	$$
-	\lambda_{i}\left(W_{c n} W_{o n}\right)=\lambda_{i}\left(R^{-1} W_{c} R^{-T} R^{T} W_{o} R\right)=\lambda_{i}\left(R^{-1} W_{c} W_{o} R\right)=\lambda_{i}\left(W_{c} W_{o}\right) .
-	$$
-	These invariants are denoted $\gamma_{i}$,
-	$$
-	\gamma_{i}=\sqrt{\lambda_{i}\left(W_{c} W_{o}\right)}, \quad i=1, \ldots, N,
-	$$
-	\emph{and are called the Hankel singular values of the system.''}
-
+	\pagebreak
 	\section{Typy aktivních a poloaktivních aktuátorů používaných v mechatronických systémech, hlavní vlastnosti, důsledky pro použití.}
 
 	\subsection{Aktivní aktuátory}
@@ -291,12 +288,12 @@
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics{figs/AktivniAktuator.png}
+		\includegraphics[width=0.4\linewidth]{figs/AktivniAktuator.png}
 	\end{figure}
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[width=0.5\linewidth]{figs/VoiceCoil.png}
+		\includegraphics[width=0.3\linewidth]{figs/VoiceCoil.png}
 		\caption{Voice coil}
 	\end{figure}
 
@@ -309,7 +306,7 @@
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics{figs/PoloAktivniAktuator.png}
+		\includegraphics[width=0.4\linewidth]{figs/PoloAktivniAktuator.png}
 	\end{figure}
 
 	\section{Snižování vibrací (low-authority) versus řízení pohybu/polohy (high-authority). Princip, příklady}
@@ -363,15 +360,34 @@
 	\pagebreak
 	\section{Aktivní tlumení vibrací pomocí kolokovaných aktuátorů a senzorů. Příklad s použitím planárních piezo-aktuátorů.}
 
-	\emph{``Collocated controllers have their sensors collocated with actuators. They are a special case of the dissipative controllers, which are designed based on the passivity principle.''}
+	% \emph{``Collocated controllers have their sensors collocated with actuators. They are a special case of the dissipative controllers, which are designed based on the passivity principle.''}
 
-	As stated by Joshi [83, p. 45] “the stability of dissipative controllers is guaranteed regardless of the number of modes controlled (or even modeled), and regardless of parameter errors.”
+	% \emph{``As a corollary, consider a system with the state-space representation $(\bm{A}, \bm{B}, \bm{C})$, which has collocated sensors and actuators, that is, $\bm{C}=\bm{B}^{T}$. In this case, a closedloop system with the proportional feedback gain
+	% $$
+	% \bm{u}=-\bm{K}\bm{y}
+	% $$
+	% is stable, for $\bm{K}=\operatorname{diag}\left(k_i\right), i=1, \ldots, r$ and $k_i>0$.''}
 
-	\emph{``As a corollary, consider a system with the state-space representation $(A, B, C)$, which has collocated sensors and actuators, that is, $C=B^{T}$. In this case, a closedloop system with the proportional feedback gain
-	$$
-	\bm{u}=-\bm{K}\bm{y}
-	$$
-	is stable, for $\bm{K}=\operatorname{diag}\left(k_i\right), i=1, \ldots, r$ and $k_i>0$.''}
+	% Asymptotická stabilita disipativního systému $(\bm{A}, \bm{B}, \bm{C})$, kde počet vstupů se rovná počtu výstupů, je zaručena při zpětnovazební regulaci ve tvaru
+	% \begin{equation}
+	% 	\bm{u}=-\bm{K}\bm{y}
+	% \end{equation}
+	% pokud matice $\bm{K}$ je pozitivně definitní.
+
+	Systém ve tvaru $(\bm{A}, \bm{B}, \bm{C})$, který má stejný počet vstupů a výstupů nazveme striktně dispativní pokud existuje pozitivně definitní matice $\bm{P}$ a matice $\bm{Q}$ takové, že
+	\begin{align}
+		\bm{A}^T\bm{P} + \bm{P}\bm{A} &= \bm{Q}^T\bm{Q} \\
+		\bm{B}^T\bm{P} &= \bm{C}
+	\end{align}
+	a $\bm{Q}^T\bm{Q}$ je pozitivně semi-definitní. Obecná podmínka asymptotické stability disipativního systému je, že ve zpětné vazbě
+	\begin{equation}
+		\bm{u}=-\bm{K}\bm{y}
+	\end{equation}
+	je matice $\bm{K}$ je pozitivně definitní.
+
+	Systém s kolokovanými senzory a aktuátory je speciální případ disipativního systému kde $\bm{C}=\bm{B}^{T}$. Matice $\bm{K}$ je například pozitivně definitní pokud $\bm{K}=\operatorname{diag}\left(k_i\right), k_i>0$ kdy se jedná u kolokovaného systému o PPF.
+
+	% osobně si myslím, že by stačilo CB je diag a poz def
 
 	\pagebreak
 	\section{Aktivní vibroizolace soustav, integrální silová zpětná vazba, příklad návrhu řízení.}
